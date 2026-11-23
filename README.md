@@ -38,3 +38,14 @@ Python과 PyTorch로 딥러닝 검사도 추가해보려고 합니다.
 - Python
 - PyTorch
 - Git
+
+
+# Dataset
+
+Carinthia SEM Defect Dataset을 사용합니다.
+
+Source:
+https://zenodo.org/records/10696644
+
+원본 데이터와 압축 파일은 용량과 라이선스 문제로 Git 저장소에 포함하지 않습니다.
+필요한 경우 위 출처에서 직접 다운로드합니다.

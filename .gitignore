@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# C++ build
+build/
+out/
+.vs/
+*.obj
+*.exe
+*.dll
+*.pdb
+
+# 대용량 데이터셋
+data/sample/data/
+data/raw/
+data/processed/
+*.zip
+
+# 결과 파일
+results/
+
+# 모델 파일
+models/*.pt
+models/*.pth
+models/*.onnx
+models/*.engine
+
+# IDE
+.vscode/
+.idea/
+
+# 로그
+*.log
