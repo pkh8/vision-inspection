@@ -16,9 +16,14 @@ add_executable(
     src/main.cpp
     src/ImageLoader.cpp
     src/ImagePreProcessor.cpp
+    src/Inspection.cpp
     include/ImageLoader.h
     include/ImagePreProcessor.h
+    include/Inspection.h
+    include/InspectionResult.h
+
 )
+
 
 target_include_directories(
     VisionInspection

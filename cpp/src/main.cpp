@@ -1,8 +1,11 @@
 #include <iostream>
 #include <windows.h>
-#include <opencv2/opencv.hpp>
+#include <opencv2/core/version.hpp>
+
 #include "ImageLoader.h"
-#include "ImagePreprocessor.h"
+#include "ImagePreProcessor.h"
+#include "Inspection.h"
+#include "InspectionResult.h"
 
 
 int main()
@@ -19,61 +22,23 @@ int main()
         "K:/Project/AIAgent/Vision_Project/results/binary.jpg";
 
 
-    // 이미지 입력 담당 객체
     ImageLoader loader;
-
-    cv::Mat image = loader.load(imagePath);
-
-
-	// 이미지 읽기 실패 여부 확인
-	if (image.empty())
-	{
-		std::cout << "이미지를 읽지 못했습니다." << std::endl;
-		std::cout << "imageread:" << imagePath << std::endl;
-        return 1;
-	}
-	std::cout << "이미지 읽기 성공" << std::endl;
-	std::cout << "가로: " << image.cols << std::endl;
-	std::cout << "세로: " << image.rows << std::endl;
-	std::cout << "채널 수: " << image.channels() << std::endl;
-
-
-    // 이미지 전처리 담당 객체
     ImagePreProcessor preProcessor;
-    cv::Mat grayImage = preProcessor.toGray(image);
 
+    Inspection inspection(loader, preProcessor);
 
-    if (grayImage.empty())
+    InspectionResult result = inspection.run(imagePath, outputPath, 100.0);
+
+    if (!result.success)
     {
-        std::cout << "그레이스케일 변환에 실패했습니다." << std::endl;
+        std::cout << "검사 실패:" << result.message << std::endl;
         return 1;
     }
+    
 
-    std::cout << "그레이스케일 변환 성공" << std::endl;
-    std::cout   << "변환 후 채널 수 : "
-                << grayImage.channels()
-                << std::endl;
+    std::cout << "검사 실행 성공" << std::endl;
+    std::cout << result.message << std::endl;
 
-
-    cv::Mat binaryImage = preProcessor.threshold(grayImage, 100.0);
-
-    if (binaryImage.empty())
-    {
-        std::cout << "이진화에 실패했습니다." << std::endl;
-        return 1;
-    }
-
-    const bool saved =
-        cv::imwrite(outputPath, binaryImage);
-
-    if (!saved)
-    {
-        std::cout << "이진화 이미지 저장에 실패했습니다." << std::endl;
-        return 1;
-    }
-
-    std::cout << "이진화 이미지 저장 성공" << std::endl;
-    std::cout << "저장 경로: " << outputPath << std::endl;
 
 	return 0;
 }
