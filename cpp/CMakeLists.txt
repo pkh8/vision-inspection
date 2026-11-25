@@ -17,10 +17,15 @@ add_executable(
     src/ImageLoader.cpp
     src/ImagePreProcessor.cpp
     src/Inspection.cpp
+    src/DefectDetector.cpp
+    src/InspectionVisualizer.cpp
+
     include/ImageLoader.h
     include/ImagePreProcessor.h
     include/Inspection.h
     include/InspectionResult.h
+    include/DefectDetector.h
+    include/InspectionVisualizer.h
 
 )
 

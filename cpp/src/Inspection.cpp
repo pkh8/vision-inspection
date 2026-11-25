@@ -5,10 +5,14 @@
 
 Inspection::Inspection(
     ImageLoader& imageLoder,
-    ImagePreProcessor& preProcessor
+    ImagePreProcessor& preProcessor,
+    DefectDetector& defectDefector,
+    InspectionVisualizer& visualLizer
 )
     :imageLoader_(imageLoder),
-    preProcessor_(preProcessor)
+    preProcessor_(preProcessor),
+    defectDetector_(defectDefector),
+    visualLizer_(visualLizer)
 {
    
 }
@@ -16,6 +20,7 @@ Inspection::Inspection(
 InspectionResult Inspection::run(
     const std::string& imagePath,
     const std::string& outputPath,
+    const std::string& resultOutputPath,
     double thresholdValue
 )
 {
@@ -50,15 +55,29 @@ InspectionResult Inspection::run(
         return result;
     }
 
+    InspectionResult detectionResult = defectDetector_.defect(binaryImage, 20.0);
+
     if (!cv::imwrite(outputPath, binaryImage))
     {
-        result.message = "결과 이미지 저장에 실패했습니다.";
-        return result;
+        detectionResult.success = false;
+        detectionResult.message =
+            "이진화 이미지 저장에 실패했습니다.";
+
+        return detectionResult;
     }
 
-    result.success = true;
-    result.passed = true;
-    result.message = "기본 전처리가 완료되었습니다.";
 
-    return result;
+    cv::Mat visualizedImage = visualLizer_.drawResult(image, detectionResult);
+
+
+    if (!cv::imwrite(resultOutputPath, visualizedImage))
+    {
+        detectionResult.success = false;
+        detectionResult.message = "결과 이미지 저장에 실패했습니다.";
+        return detectionResult;
+    }
+
+    detectionResult.success = true;
+
+    return detectionResult;
 }

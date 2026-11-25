@@ -3,6 +3,8 @@
 #include "ImageLoader.h"
 #include "ImagePreProcessor.h"
 #include "InspectionResult.h"
+#include "DefectDetector.h"
+#include "InspectionVisualizer.h"
 
 
 #include <string>
@@ -12,13 +14,16 @@ class Inspection
 public:
     Inspection(
         ImageLoader& imageLoader,
-        ImagePreProcessor& preProcessor
+        ImagePreProcessor& preProcessor,
+        DefectDetector& defectDefector,
+        InspectionVisualizer& visualLizer
     );
 
 
     InspectionResult run(
         const std::string& imagePath,
         const std::string& outputPath,
+        const std::string& resultOutputPath,
         double thresholdValue = 100.0
     );
 
@@ -26,4 +31,6 @@ public:
 private:
     ImageLoader& imageLoader_;
     ImagePreProcessor& preProcessor_;
+    DefectDetector& defectDetector_;
+    InspectionVisualizer& visualLizer_;
 };

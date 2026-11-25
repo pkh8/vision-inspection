@@ -1,4 +1,4 @@
-#include "ImagePreprocessor.h"
+#include "ImagePreProcessor.h"
 #include <opencv2/imgproc.hpp>
 
 
@@ -41,10 +41,25 @@ cv::Mat ImagePreProcessor::threshold(
     cv::threshold(
         grayImage,
         binaryImage,
-        thresholdValue,
-        255.0,
-        cv::THRESH_BINARY
+        thresholdValue,              // 기준 밝기
+        255.0,              // 검출 영역을 흰색으로
+        cv::THRESH_BINARY_INV
     );
+
+    cv::Mat kernel = cv::getStructuringElement(
+        cv::MORPH_ELLIPSE, 
+        cv::Size(5, 5));
+
+    cv::morphologyEx(
+        binaryImage,
+        binaryImage,
+        cv::MORPH_CLOSE,
+        kernel
+    );
+
+
+
+
 
     return binaryImage;
 }
