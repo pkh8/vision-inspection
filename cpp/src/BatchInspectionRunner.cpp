@@ -3,6 +3,7 @@
 #include<algorithm>
 #include<cctype>
 #include<iostream>
+#include<fstream>
 
 
 
@@ -75,6 +76,30 @@ void BatchInspectionRunner::run(
 
     std::filesystem::create_directories(outputDirectory);
 
+    const std::filesystem::path summaryPath = outputDirectory / "summary.csv";
+
+    std::ofstream  csvFile(
+        summaryPath.string(),
+        std::ios::out | std::ios::binary
+    );
+
+    if (!csvFile.is_open())
+    {
+        std::cout << "CSV파일을 열 수 없습니다." << std::endl;
+        return;
+    }
+    const unsigned char utf8Bom[] =
+    {
+        0xEF, 0xBB, 0xBF
+    };
+
+    csvFile.write(
+        reinterpret_cast<const char*>(utf8Bom),
+        sizeof(utf8Bom)
+    );
+
+    csvFile << "file_name,success,passed,defect_count,message\n";
+
     for (const auto& entry : std::filesystem::directory_iterator(inputDirectory))
     {
         if (!entry.is_regular_file())
@@ -99,9 +124,22 @@ void BatchInspectionRunner::run(
             config
         );
 
+        csvFile << inputFile.filename().string()<< ","
+            << result.success << ","
+            << result.passed << ","
+            << result.defectCount << ","
+            << result.message
+            << "\n";
+
         std::cout << inputFile.filename().string() << ":" << result.message << "/결함 개수:" << result.defectCount << std::endl;
 
     }
+    csvFile.close();
+
+    std::cout
+        << "CSV 결과 저장 완료: "
+        << summaryPath.string()
+        << std::endl;
 
 }
 
