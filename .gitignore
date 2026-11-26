@@ -20,8 +20,11 @@ data/raw/
 data/processed/
 *.zip
 
+# 테스트 이미지
+/data/sample/testImages/
+
 # 결과 파일
-results/
+/results/
 
 # 모델 파일
 models/*.pt

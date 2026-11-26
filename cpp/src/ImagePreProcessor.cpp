@@ -26,7 +26,8 @@ cv::Mat ImagePreProcessor::toGray(const cv::Mat& image) const
 
 cv::Mat ImagePreProcessor::threshold(
     const cv::Mat& grayImage,
-    double thresholdValue
+    double thresholdValue,
+    int kernelSize
 )const
 {
     //입력 이미지가 비어 있으면 이진화지 않습니다.
@@ -48,7 +49,7 @@ cv::Mat ImagePreProcessor::threshold(
 
     cv::Mat kernel = cv::getStructuringElement(
         cv::MORPH_ELLIPSE, 
-        cv::Size(5, 5));
+        cv::Size(kernelSize, kernelSize));
 
     cv::morphologyEx(
         binaryImage,

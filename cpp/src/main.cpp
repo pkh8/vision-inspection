@@ -3,32 +3,27 @@
 
 #include <opencv2/core/version.hpp>
 #include <opencv2/core/utils/logger.hpp>
+#include <filesystem>
 
 #include "ImageLoader.h"
 #include "ImagePreProcessor.h"
 #include "DefectDetector.h"
 #include "InspectionVisualizer.h"
 #include "Inspection.h"
-#include "InspectionResult.h"
+#include "BatchInspectionRunner.h"
 
 
 int main()
 {
 
+
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
+
 	std::cout << "Vision Inspection Start" << std::endl;
 	std::cout << "OpenCV version:" << CV_VERSION << std::endl;
+
     cv::utils::logging::setLogLevel(cv::utils::logging::LOG_LEVEL_ERROR);
-
-	const std::string imagePath = "K:/Project/AIAgent/Vision_Project/data/sample/data/images/5fe0a834387b43f0972178e926fe63ff.jpg";
-
-    const std::string outputPath =
-        "K:/Project/AIAgent/Vision_Project/results/binary.jpg";
-
-    const std::string resultOutputPath =
-        "K:/Project/AIAgent/Vision_Project/results/inspection_result.jpg";
-
 
     ImageLoader loader;
     ImagePreProcessor preProcessor;
@@ -36,23 +31,20 @@ int main()
     InspectionVisualizer visualizer;
 
     Inspection inspection(loader, preProcessor, defectDetector, visualizer);
-    double threshold = 75;
+    InspectionConfig config;
+    BatchInspectionRunner batchRunner(inspection);
 
-    InspectionResult result = inspection.run(imagePath, outputPath, resultOutputPath, threshold);
+    const std::filesystem::path inputDirectory =
+        "K:/Project/AIAgent/Vision_Project/data/sample/testImages";
 
-    if (!result.success)
-    {
-        std::cout << "검사 실패:" << result.message << std::endl;
-        return 1;
-    }
-    
+    const std::filesystem::path outputDirectory =
+        "K:/Project/AIAgent/Vision_Project/results/batch";
 
-    std::cout << "검사 실행 성공" << std::endl;
-    std::cout << result.message << std::endl;
-    std::cout << "결함 개수: "
-        << result.defectCount
-        << std::endl;
-
+    batchRunner.run(
+        inputDirectory,
+        outputDirectory,
+        config
+    );
 
 	return 0;
 }

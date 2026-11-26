@@ -5,6 +5,7 @@
 #include "InspectionResult.h"
 #include "DefectDetector.h"
 #include "InspectionVisualizer.h"
+#include "InspectionConfig.h"
 
 
 #include <string>
@@ -15,8 +16,8 @@ public:
     Inspection(
         ImageLoader& imageLoader,
         ImagePreProcessor& preProcessor,
-        DefectDetector& defectDefector,
-        InspectionVisualizer& visualLizer
+        DefectDetector& defectDetector,
+        InspectionVisualizer& visuaLizer
     );
 
 
@@ -24,7 +25,7 @@ public:
         const std::string& imagePath,
         const std::string& outputPath,
         const std::string& resultOutputPath,
-        double thresholdValue = 100.0
+        const InspectionConfig& config
     );
 
 
@@ -32,5 +33,5 @@ private:
     ImageLoader& imageLoader_;
     ImagePreProcessor& preProcessor_;
     DefectDetector& defectDetector_;
-    InspectionVisualizer& visualLizer_;
+    InspectionVisualizer& visualizer_;
 };

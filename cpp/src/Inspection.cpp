@@ -4,15 +4,15 @@
 
 
 Inspection::Inspection(
-    ImageLoader& imageLoder,
+    ImageLoader& imageLoader,
     ImagePreProcessor& preProcessor,
-    DefectDetector& defectDefector,
-    InspectionVisualizer& visualLizer
+    DefectDetector& defectDetector,
+    InspectionVisualizer& visuaLizer
 )
-    :imageLoader_(imageLoder),
+    :imageLoader_(imageLoader),
     preProcessor_(preProcessor),
-    defectDetector_(defectDefector),
-    visualLizer_(visualLizer)
+    defectDetector_(defectDetector),
+    visualizer_(visuaLizer)
 {
    
 }
@@ -21,7 +21,7 @@ InspectionResult Inspection::run(
     const std::string& imagePath,
     const std::string& outputPath,
     const std::string& resultOutputPath,
-    double thresholdValue
+    const InspectionConfig& config
 )
 {
     InspectionResult result;
@@ -46,7 +46,8 @@ InspectionResult Inspection::run(
     cv::Mat binaryImage =
         preProcessor_.threshold(
             grayImage,
-            thresholdValue
+            config.thresholdValue,
+            config.morphologyKernelSize
         );
 
     if (binaryImage.empty())
@@ -54,8 +55,13 @@ InspectionResult Inspection::run(
         result.message = "이진화에 실패했습니다.";
         return result;
     }
+    
+    InspectionResult detectionResult = defectDetector_.defect(binaryImage, config.MinDefectArea);
 
-    InspectionResult detectionResult = defectDetector_.defect(binaryImage, 20.0);
+    if (!detectionResult.success)
+    {
+        return detectionResult;
+    }
 
     if (!cv::imwrite(outputPath, binaryImage))
     {
@@ -66,9 +72,7 @@ InspectionResult Inspection::run(
         return detectionResult;
     }
 
-
-    cv::Mat visualizedImage = visualLizer_.drawResult(image, detectionResult);
-
+    cv::Mat visualizedImage = visualizer_.drawResult(image, detectionResult);
 
     if (!cv::imwrite(resultOutputPath, visualizedImage))
     {
@@ -77,7 +81,6 @@ InspectionResult Inspection::run(
         return detectionResult;
     }
 
-    detectionResult.success = true;
 
     return detectionResult;
 }

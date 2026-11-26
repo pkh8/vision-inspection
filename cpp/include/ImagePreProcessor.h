@@ -1,6 +1,7 @@
 #pragma once
 
 #include <opencv2/core.hpp>
+#include<InspectionConfig.h>
 
 
 
@@ -12,7 +13,8 @@ public:
 
     cv::Mat threshold(
         const cv::Mat& grayImage,
-        double thresholdValue = 100.0
+        double thresholdValue,
+        int kernelSize
     )const;
 
 };

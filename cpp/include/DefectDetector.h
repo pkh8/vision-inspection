@@ -10,6 +10,6 @@ class DefectDetector
 public:
     InspectionResult defect(
         const cv::Mat& binaryImage,
-        double minArea = 20.0
+        double minArea
     )const;
 };

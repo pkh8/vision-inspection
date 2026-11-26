@@ -19,14 +19,17 @@ add_executable(
     src/Inspection.cpp
     src/DefectDetector.cpp
     src/InspectionVisualizer.cpp
+    src/BatchInspectionRunner.cpp
 
     include/ImageLoader.h
     include/ImagePreProcessor.h
     include/Inspection.h
+    include/InspectionConfig.h
     include/InspectionResult.h
     include/DefectDetector.h
     include/InspectionVisualizer.h
-
+    include/BatchInspectionRunner.h
+    
 )
 
 
