@@ -72,7 +72,7 @@ InspectionResult Inspection::run(
         return detectionResult;
     }
 
-    cv::Mat visualizedImage = visualizer_.drawResult(image, detectionResult);
+    cv::Mat visualizedImage = visualizer_.drawResult(image, detectionResult, config);
 
     if (!cv::imwrite(resultOutputPath, visualizedImage))
     {
@@ -80,6 +80,7 @@ InspectionResult Inspection::run(
         detectionResult.message = "결과 이미지 저장에 실패했습니다.";
         return detectionResult;
     }
+
 
 
     return detectionResult;

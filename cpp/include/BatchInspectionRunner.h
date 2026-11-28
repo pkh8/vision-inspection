@@ -5,12 +5,14 @@
 
 #include "Inspection.h"
 #include "InspectionConfig.h"
+#include "RoiExtractor.h"
 
 class BatchInspectionRunner
 {
 public:
     explicit BatchInspectionRunner(
-        Inspection& inspection
+        Inspection& inspection,
+        const RoiExtractor* roiExtractor = nullptr
     );
 
     // 입력 폴더의 이미지들을 순서대로 검사한다.
@@ -35,4 +37,5 @@ private:
 
     // 외부에서 전달받은 검사 객체를 보관한다.
     Inspection& inspection_;
+    const RoiExtractor* roiExtractor_ = nullptr;
 };

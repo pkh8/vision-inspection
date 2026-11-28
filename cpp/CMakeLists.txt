@@ -20,6 +20,7 @@ add_executable(
     src/DefectDetector.cpp
     src/InspectionVisualizer.cpp
     src/BatchInspectionRunner.cpp
+    src/RoiExtractor.cpp
 
     include/ImageLoader.h
     include/ImagePreProcessor.h
@@ -29,6 +30,7 @@ add_executable(
     include/DefectDetector.h
     include/InspectionVisualizer.h
     include/BatchInspectionRunner.h
+    include/RoiExtractor.h
     
 )
 

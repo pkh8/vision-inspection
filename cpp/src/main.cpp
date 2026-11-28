@@ -32,10 +32,12 @@ int main()
 
     Inspection inspection(loader, preProcessor, defectDetector, visualizer);
     InspectionConfig config;
-    BatchInspectionRunner batchRunner(inspection);
+    RoiExtractor roiExtractor(config);
+    BatchInspectionRunner batchRunner(inspection, &roiExtractor);
 
     const std::filesystem::path inputDirectory =
-        "K:/Project/AIAgent/Vision_Project/data/sample/testImages";
+        //"K:/Project/AIAgent/Vision_Project/data/sample/testImages";
+        "K:/Project/AIAgent/Vision_Project/data/sample/data/images";
 
     const std::filesystem::path outputDirectory =
         "K:/Project/AIAgent/Vision_Project/results/batch";
@@ -45,6 +47,7 @@ int main()
         outputDirectory,
         config
     );
+
 
 	return 0;
 }
