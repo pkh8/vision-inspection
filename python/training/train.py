@@ -10,28 +10,39 @@ from torchvision import models, transforms
 from torchvision.models import ResNet18_Weights
 
 from dataset import CarinthiaDataset
+from dataclasses import dataclass
+
+
 
 
 # 현재 파일 위치를 기준으로 프로젝트 루트 경로를 계산한다.
+@dataclass
+class TrainingConfig:
+    image_size: int = 480
+    batch_size: int = 8
+    epochs: int = 30
+    learning_rate: float = 1e-4
+    num_classes: int = 3
+
+
+
+CONFIG = TrainingConfig()
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
-# 학습·검증 데이터 CSV 경로
+IMAGE_SIZE = CONFIG.image_size
+BATCH_SIZE = CONFIG.batch_size
+EPOCHS = CONFIG.epochs
+LEARNING_RATE = CONFIG.learning_rate
+NUM_CLASSES = CONFIG.num_classes
 TRAIN_CSV = PROJECT_ROOT / "data" / "sample" / "splits" / "train.csv"
 VAL_CSV = PROJECT_ROOT / "data" / "sample" / "splits" / "val.csv"
 
-# CSV의 상대 이미지 경로를 조합할 기준 폴더
+
+
 DATASET_ROOT = PROJECT_ROOT / "data" / "sample"
-
-# 학습된 모델을 저장할 경로
 MODEL_DIR = PROJECT_ROOT / "models"
-MODEL_PATH = MODEL_DIR / "defect_resnet18_best.pth"
-
-# 학습 기본 설정
-IMAGE_SIZE = 224
-BATCH_SIZE = 32
-EPOCHS = 20
-LEARNING_RATE = 1e-3
-NUM_CLASSES = 3
+MODEL_PATH = MODEL_DIR / "defect_resnet18_480.pth"
 
 
 def create_transforms():
@@ -43,7 +54,7 @@ def create_transforms():
     # 학습 데이터에는 일부 랜덤 변환을 적용해 과적합을 줄인다.
     train_transform = transforms.Compose(
         [
-            transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+            transforms.Resize((CONFIG.image_size, CONFIG.image_size)),
             transforms.RandomHorizontalFlip(),
             transforms.RandomRotation(10),
             transforms.ToTensor(),
@@ -57,7 +68,7 @@ def create_transforms():
     # 검증 데이터에는 랜덤 변환을 적용하지 않는다.
     val_transform = transforms.Compose(
         [
-            transforms.Resize((IMAGE_SIZE, IMAGE_SIZE)),
+            transforms.Resize((CONFIG.image_size, CONFIG.image_size)),
             transforms.ToTensor(),
             transforms.Normalize(
                 mean=weights.transforms().mean,
